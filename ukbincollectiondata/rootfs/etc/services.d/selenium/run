@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bashio
+
+bashio::log.info "Starting Selenium server..."
+
+# Start Selenium standalone server with Chrome
+exec java -jar /opt/selenium-server.jar standalone \
+    --port 4444 \
+    --allow-cors true

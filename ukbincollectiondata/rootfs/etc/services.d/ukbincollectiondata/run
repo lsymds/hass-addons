@@ -1,0 +1,43 @@
+#!/usr/bin/with-contenv bashio
+
+# Export configuration as environment variables
+export SCHEDULE=$(bashio::config 'schedule')
+export COUNCIL=$(bashio::config 'council')
+export POSTCODE=$(bashio::config 'postcode')
+export HOUSE_NUMBER=$(bashio::config 'house_number')
+export UPRN=$(bashio::config 'uprn')
+export COUNCIL_OVERRIDE_URL=$(bashio::config 'council_override_url')
+
+# Wait for Selenium to be ready
+bashio::log.info "Waiting for Selenium to be ready..."
+attempt=1
+max_attempts=30
+delay=2
+
+while [ $attempt -le $max_attempts ]; do
+    if curl -s "http://localhost:4444/wd/hub/status" > /dev/null; then
+        bashio::log.info "Selenium is ready!"
+        break
+    fi
+
+    bashio::log.info "Attempt ${attempt}/${max_attempts}: Selenium not ready yet, waiting ${delay} seconds..."
+    sleep $delay
+
+    # Double the delay for next attempt, but cap at 30 seconds
+    delay=$((delay * 2))
+    if [ $delay -gt 30 ]; then
+        delay=30
+    fi
+
+    attempt=$((attempt + 1))
+done
+
+if [ $attempt -gt $max_attempts ]; then
+    bashio::log.error "Selenium failed to become ready after ${max_attempts} attempts"
+    exit 1
+fi
+
+# Start the application
+bashio::log.info "Starting UK Bin Collection Data..."
+cd /ukbincollectiondata
+exec python3 ukbincollectiondata.py
