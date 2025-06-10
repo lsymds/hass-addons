@@ -1,0 +1,19 @@
+configuration:
+  schedule:
+    name: Schedule
+    description: The cron schedule for checking bin collection data (default is every 12 hours, see https://crontab.guru/ for more options)
+  council:
+    name: Council
+    description: The council to retrieve the bin collection data for
+  postcode:
+    name: Postcode
+    description: Your property's postcode
+  house_number:
+    name: House Number
+    description: Your house number or property name (only required for some councils)
+  uprn:
+    name: UPRN
+    description: Unique Property Reference Number (only required for some councils, find yours at https://uprn.uk/)
+  council_override_url:
+    name: Council Override URL
+    description: Override the default council URL (only required for some councils)
