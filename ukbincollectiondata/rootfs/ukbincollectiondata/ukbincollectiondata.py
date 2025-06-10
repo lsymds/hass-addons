@@ -162,7 +162,7 @@ def update_sensor(sensor_id, state):
     attributes = {
         "friendly_name": friendly_name,
         "icon": "mdi:trash-can",
-        "device_class": "timestamp",
+        "state_class": "measurement",
         "last_updated": datetime.now().isoformat(),
     }
     attributes.update(state)  # Add all the state data as attributes
