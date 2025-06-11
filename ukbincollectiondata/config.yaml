@@ -1,5 +1,5 @@
 name: "UK Bin Collection Data"
-version: "1.0.2"
+version: "1.1.0"
 slug: "ukbincollectiondata"
 description: "UK Bin Collection Data integration for Home Assistant"
 url: "https://github.com/lsymds/hass-addons/ukbincollectiondata"

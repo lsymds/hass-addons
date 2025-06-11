@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import requests
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import parser
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -109,7 +109,7 @@ def action(council_id, council_url, postcode, house_number, uprn):
                 'colour': next_collection.get('colour', ''),
                 'days_until': days_until,
                 'date': next_collection['collectionDate'],
-                'human_readable_date': collection_date.strftime('%A, %d %B %Y')
+                'human_readable_date': format_collection_date(collection_date)
             })
 
             # Process each bin type
@@ -124,7 +124,7 @@ def action(council_id, council_url, postcode, house_number, uprn):
                         'colour': collection.get('colour', ''),
                         'next_collection_days_until': days_until,
                         'next_collection_date': collection['collectionDate'],
-                        'next_collection_human_readable_date': collection_date.strftime('%A, %d %B %Y')
+                        'next_collection_human_readable_date': format_collection_date(collection_date)
                     }
                     logger.debug("Updating sensor for bin type: %s", bin_type)
                     update_sensor(f'bin_{bin_type}', bin_types[bin_type])
@@ -193,6 +193,29 @@ def update_sensor(sensor_id, state):
 
     except requests.exceptions.RequestException as e:
         logger.exception("Error updating sensor %s: %s", entity_id, str(e))
+
+def format_collection_date(collection_date: date) -> str:
+    """
+    Formats a collection date in a human readable format:
+    - Today for same date
+    - Tomorrow for next day
+    - Day name for within 7 days
+    - "Next {Day}" for 7-13 days
+    - Full date with day name otherwise
+    """
+    today = datetime.now().date()
+    days_until = (collection_date - today).days
+
+    if days_until == 0:
+        return "Today"
+    elif days_until == 1:
+        return "Tomorrow"
+    elif days_until < 7:
+        return collection_date.strftime('%A')
+    elif days_until < 14:
+        return f"Next {collection_date.strftime('%A')}"
+    else:
+        return collection_date.strftime('%A, %d %B %Y')
 
 if __name__ == "__main__":
     app()
