@@ -100,7 +100,7 @@ def action(council_id, council_url, postcode, house_number, uprn):
         # Process next collection
         if collections:
             next_collection = collections[0]
-            collection_date = parser.parse(next_collection['collectionDate']).date()
+            collection_date = parser.parse(next_collection['collectionDate'], dayfirst=True).date()
             days_until = (collection_date - datetime.now().date()).days
 
             logger.info("Next collection: %s in %d days", next_collection['type'], days_until)
@@ -117,7 +117,7 @@ def action(council_id, council_url, postcode, house_number, uprn):
             for collection in collections:
                 bin_type = collection['type'].lower().replace(" ", "_")
                 if bin_type not in bin_types:
-                    collection_date = parser.parse(collection['collectionDate']).date()
+                    collection_date = parser.parse(collection['collectionDate'], dayfirst=True).date()
                     days_until = (collection_date - datetime.now().date()).days
                     bin_types[bin_type] = {
                         'type': collection['type'],

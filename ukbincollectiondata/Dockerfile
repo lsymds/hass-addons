@@ -49,6 +49,6 @@ LABEL \
     io.hass.name="UK Bin Collection Data" \
     io.hass.description="UK Bin Collection Data integration for Home Assistant" \
     io.hass.type="addon" \
-    io.hass.version="1.1.0" \
+    io.hass.version="1.1.1" \
     maintainer="lsymds" \
     org.opencontainers.image.source="https://github.com/lsymds/hass-addons"
